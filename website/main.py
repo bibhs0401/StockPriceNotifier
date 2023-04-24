@@ -1,19 +1,23 @@
-from website import create_app
-
-app=create_app()
-
 from flask import Flask, render_template, request, redirect
 from apscheduler.schedulers.background import BackgroundScheduler
 import yfinance as yf
+from flask_mail import Mail, Message
+import smtplib
 
 app = Flask(__name__)
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = 'abc@gmail.com'
+app.config['MAIL_PASSWORD'] = 'email_password'
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+mail = Mail(app)
 
 @app.route('/')
 def home():
     return render_template('index.html')
 
 @app.route('/submit', methods=['POST'])
-
 def submit():
     # Get the form data
     ticker = request.form['ticker']
@@ -31,11 +35,20 @@ def submit():
     if data['Close'][0] >= threshold:
         # Send the notification
         if notification == 'email':
-            # Code to send email notification
-            pass
+
+            #  send email notification
+            msg = Message('Stock Alert', sender = 'abc@gmail.com', recipients = [email])
+            msg.body = f'The stock price of {ticker} has reached the threshold of {threshold}. The current price is {data["Close"][0]}.'
+            mail.send(msg)
         elif notification == 'sms':
-            # Code to send SMS notification
-            pass
+
+            # send SMS notification using SMTP
+            server = smtplib.SMTP('smtp.gmail.com', 587)
+            server.starttls()
+            server.login('abc@gmail.com', 'email_password')
+            message = f'The stock price of {ticker} has reached the threshold of {threshold}. The current price is {data["Close"][0]}.'
+            server.sendmail('abc@gmail.com', f'{phone_number}@sms_gateway_domain.com', message)
+            server.quit()
 
     # Redirect to the home page
     return redirect('/')
@@ -43,7 +56,5 @@ def submit():
 scheduler = BackgroundScheduler(daemon=True)
 scheduler.start()
 
-
 if __name__ =='__main__':
     app.run(debug=True)
-    
