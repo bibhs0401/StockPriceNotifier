@@ -3,6 +3,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 import yfinance as yf
 from flask_mail import Mail, Message
 import smtplib
+import time
 
 app = Flask(__name__)
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -30,6 +31,9 @@ def submit():
     # Retrieve the stock data
     stock = yf.Ticker(ticker)
     data = stock.history(period='1d')
+
+    # wait for the specified frequency before checking stock price again
+    time.sleep(frequency * 3600)
 
     # Check if the threshold has been met
     if data['Close'][0] >= threshold:
