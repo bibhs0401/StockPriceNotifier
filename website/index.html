@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stock Price Alert</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <h1>Stock Price Alert</h1>
+    <form action="/submit" method="POST">
+        <label for="ticker">Stock Ticker Symbol:</label>
+        <input type="text" id="ticker" name="ticker"><br><br>
+        <label for="threshold">Threshold:</label>
+        <input type="text" id="threshold" name="threshold"><br><br>
+        <label for="frequency">Frequency:</label>
+        <select id="frequency" name="frequency">
+            <option value="1">Every hour</option>
+            <option value="24">Every day</option>
+        </select><br><br>
+        <label for="notification">Notification Type:</label>
+        <select id="notification" name="notification">
+            <option value="email">Email</option>
+            <option value="sms">SMS</option>
+        </select><br><br>
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="email"><br><br>
+        <label for="phone_number">Phone Number:</label>
+        <input type="text" id="phone_number" name="phone_number"><br><br>
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>
